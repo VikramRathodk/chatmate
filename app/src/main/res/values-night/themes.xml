@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Chatmate" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Dark theme colors -->
+        <item name="colorPrimary">@color/dark_colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/dark_colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/dark_colorOnPrimary</item>
+        <item name="colorSecondary">@color/dark_colorSecondary</item>
+        <item name="colorOnSecondary">@color/dark_colorOnSecondary</item>
+        <item name="colorOnBackground">@color/dark_colorOnBackground</item>
+        <item name="colorSurface">@color/dark_colorSurface</item>
+        <item name="colorOnSurface">@color/dark_colorOnSurface</item>
+    </style>
+
+    <style name="Theme.Chatmate" parent="Base.Theme.Chatmate">
+        <!-- Additional customizations for dark theme -->
+    </style>
+</resources>

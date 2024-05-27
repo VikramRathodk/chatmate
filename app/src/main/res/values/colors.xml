@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light theme colors -->
+    <color name="light_colorPrimary">#FFA62F</color>
+    <color name="light_colorPrimaryVariant">#FFC96F</color>
+    <color name="light_colorOnPrimary">#000000</color>
+    <color name="light_colorSecondary">#ACD793</color>
+    <color name="light_colorOnSecondary">#000000</color>
+    <color name="light_colorBackground">#FFE8C8</color>
+    <color name="light_colorOnBackground">#000000</color>
+    <color name="light_colorSurface">#FFE8C8</color>
+    <color name="light_colorOnSurface">#000000</color>
+
+    <!-- Dark theme colors -->
+    <color name="dark_colorPrimary">#FF8C00</color>
+    <color name="dark_colorPrimaryVariant">#CC7000</color>
+    <color name="dark_colorOnPrimary">#FFFFFF</color>
+    <color name="dark_colorSecondary">#6FBF73</color>
+    <color name="dark_colorOnSecondary">#000000</color>
+    <color name="dark_colorBackground">#121212</color>
+    <color name="dark_colorOnBackground">#FFFFFF</color>
+    <color name="dark_colorSurface">#121212</color>
+    <color name="dark_colorOnSurface">#FFFFFF</color>
+
+
+    <color name="blue_200">#2269E1</color>
+    //black and white color
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+</resources>
