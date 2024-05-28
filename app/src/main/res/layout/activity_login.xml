@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
@@ -22,31 +23,24 @@
             app:title="@string/app_name"
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:titleTextColor="?attr/colorOnPrimary" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:src="@drawable/ic_launcher_background" />
+        android:background="?attr/colorSurface"
+        android:padding="4dp"
+        android:src="@drawable/logo" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Chatmate"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="8dp"
         android:padding="8dp"
         android:text="Login to your account"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -56,57 +50,56 @@
         android:orientation="vertical">
 
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="vertical"
-           android:layout_margin="8dp"
-           >
-           <!--    Email Input-->
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:text="Email"
-               android:textSize="16sp"
-               android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="vertical">
+            <!--    Email Input-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-           <com.google.android.material.textfield.TextInputLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               app:startIconDrawable="@drawable/baseline_call_24">
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:startIconDrawable="@drawable/baseline_call_24">
 
-               <com.google.android.material.textfield.TextInputEditText
-                   android:id="@+id/email"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:hint="Enter Email"
-                   android:inputType="textEmailAddress" />
-           </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Email"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-           <!-- Password input -->
+            <!-- Password input -->
 
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="16dp"
-               android:text="Password"
-               android:textSize="16sp"
-               android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Password"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-           <com.google.android.material.textfield.TextInputLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               app:startIconDrawable="@drawable/baseline_lock_outline_24">
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:startIconDrawable="@drawable/baseline_lock_outline_24">
 
-               <com.google.android.material.textfield.TextInputEditText
-                   android:id="@+id/password"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:hint="Enter Password"
-                   android:inputType="textEmailAddress" />
-           </com.google.android.material.textfield.TextInputLayout>
-       </LinearLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Password"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
         <com.ncorti.slidetoact.SlideToActView
             android:id="@+id/login_btn"
@@ -128,6 +121,37 @@
             app:text_color="?attr/colorOnSurface"
             app:text_size="18sp"
             app:text_style="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Don't have an Account ? "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/navigate_to_register_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                android:textColor="?attr/colorPrimary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="Forgot Password?"
+                android:textColor="?attr/colorOnPrimary"
+                android:textStyle="bold" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -170,29 +194,32 @@
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                style="@style/Widget.Material3.Button.IconButton.Outlined"
+            <Button
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:text="Facebook"
-                android:textColor="@color/black"
-                app:icon="@drawable/baseline_lock_outline_24"
+                android:textColor="?attr/colorOnPrimary"
+                app:icon="@drawable/facebook"
+
                 app:iconGravity="textStart"
-                app:iconPadding="4dp" />
+                app:iconPadding="4dp"
+                app:iconTintMode="multiply" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.Material3.Button.IconButton.Outlined"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:text="Google"
-                android:textColor="@color/black"
-                app:icon="@drawable/baseline_lock_outline_24"
+                android:textColor="?attr/colorOnPrimary"
+                app:icon="@drawable/google"
                 app:iconGravity="textStart"
-                app:iconPadding="4dp" />
+                app:iconPadding="4dp"
+                app:iconTintMode="multiply" />
         </LinearLayout>
 
 

@@ -47,6 +47,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     implementation ("com.ncorti:slidetoact:0.11.0")
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation ("com.android.volley:volley:1.2.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
