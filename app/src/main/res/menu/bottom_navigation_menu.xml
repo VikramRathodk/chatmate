@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/chat_item"
+        android:icon="@drawable/baseline_lock_outline_24"
+        android:title="Chat" />
+
+    <item
+        android:id="@+id/updates_item"
+        android:icon="@drawable/baseline_sync_24"
+        android:title="Updates" />
+
+    <item
+        android:id="@+id/more_item"
+        android:icon="@drawable/baseline_person_pin_24"
+        android:title="More" />
+
+
+
+</menu>

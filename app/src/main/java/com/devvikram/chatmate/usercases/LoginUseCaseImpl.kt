@@ -1,7 +1,7 @@
-package com.devvikram.chatmate.repository
+package com.devvikram.chatmate.usercases
 
 import com.devvikram.chatmate.models.Users
-import com.devvikram.chatmate.usercases.LoginUserCase
+import com.devvikram.chatmate.repository.LoginRepository
 
 class LoginUseCaseImpl(private val loginRepository: LoginRepository) : LoginUserCase {
 
@@ -14,4 +14,14 @@ class LoginUseCaseImpl(private val loginRepository: LoginRepository) : LoginUser
         }
         return loginRepository.login(users)
     }
+
+    override suspend fun logout() {
+        loginRepository.logout()
+    }
+
+    override fun isLoggedIn(): Boolean {
+        return loginRepository.isLoggedIn()
+    }
+
+
 }

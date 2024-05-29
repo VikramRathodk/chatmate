@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.devvikram.chatmate.databinding.ActivityLoginBinding
 import com.devvikram.chatmate.models.Users
 import com.devvikram.chatmate.repository.LoginRepositoryImpl
-import com.devvikram.chatmate.repository.LoginUseCaseImpl
+import com.devvikram.chatmate.usercases.LoginUseCaseImpl
 import com.devvikram.chatmate.usercases.LoginUserCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,10 +26,16 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        loginUserCase = LoginUseCaseImpl(LoginRepositoryImpl())
+        val sharedPreferencesHelper = SharedPreferencesHelper(applicationContext)
+        val userRepository = LoginRepositoryImpl(sharedPreferencesHelper)
+        loginUserCase = LoginUseCaseImpl(userRepository)
 
-
-
+        if (loginUserCase.isLoggedIn()) {
+            Log.d(TAG, "onCreate: already login")
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
         binding.loginBtn.setOnClickListener {
             if (binding.email.text.toString().isEmpty()) {
                 binding.email.error = "Enter your email"
