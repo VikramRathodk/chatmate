@@ -6,9 +6,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.devvikram.chatmate.databinding.ActivityMainBinding
-import com.devvikram.chatmate.repository.LoginRepositoryImpl
-import com.devvikram.chatmate.usercases.LoginUseCaseImpl
-import com.devvikram.chatmate.usercases.LoginUserCase
+import com.devvikram.chatmate.repository.UserRepositoryImpl
+import com.devvikram.chatmate.usercases.UseUseCaseImpl
+import com.devvikram.chatmate.usercases.UserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,15 +16,15 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var loginUserCase: LoginUserCase
+    lateinit var userUseCase: UserUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val sharedPreferencesHelper = SharedPreferencesHelper(applicationContext)
-        val userRepository = LoginRepositoryImpl(sharedPreferencesHelper)
-        loginUserCase = LoginUseCaseImpl(userRepository)
+        val userRepository = UserRepositoryImpl(sharedPreferencesHelper)
+        userUseCase = UseUseCaseImpl(userRepository)
 
 
         binding.logout.setOnClickListener {
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     private fun logout() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                loginUserCase.logout()
+                userUseCase.logout()
                 withContext(Dispatchers.Main) {
 //                    finish() this actiity so that it goes to login page
                     startActivity(Intent(this@MainActivity, LoginActivity::class.java))

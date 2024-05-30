@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.devvikram.chatmate.databinding.ActivityLoginBinding
 import com.devvikram.chatmate.models.Users
-import com.devvikram.chatmate.repository.LoginRepositoryImpl
-import com.devvikram.chatmate.usercases.LoginUseCaseImpl
-import com.devvikram.chatmate.usercases.LoginUserCase
+import com.devvikram.chatmate.repository.UserRepositoryImpl
+import com.devvikram.chatmate.usercases.UseUseCaseImpl
+import com.devvikram.chatmate.usercases.UserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,8 +18,8 @@ import kotlinx.coroutines.withContext
 
 
 class LoginActivity : AppCompatActivity() {
-    lateinit var binding: ActivityLoginBinding
-    lateinit var loginUserCase: LoginUserCase
+    private lateinit var binding: ActivityLoginBinding
+    private lateinit var userUseCase: UserUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +27,10 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val sharedPreferencesHelper = SharedPreferencesHelper(applicationContext)
-        val userRepository = LoginRepositoryImpl(sharedPreferencesHelper)
-        loginUserCase = LoginUseCaseImpl(userRepository)
+        val userRepository = UserRepositoryImpl(sharedPreferencesHelper)
+        userUseCase = UseUseCaseImpl(userRepository)
 
-        if (loginUserCase.isLoggedIn()) {
+        if (userUseCase.isLoggedIn()) {
             Log.d(TAG, "onCreate: already login")
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val loginSuccess = loginUserCase.login(user)
+                val loginSuccess = userUseCase.login(user)
                 Log.d(TAG, "login: login status is _ :: $loginSuccess")
                 // Switch back to the main thread
                 withContext(Dispatchers.Main) {

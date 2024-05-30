@@ -10,7 +10,15 @@ class SharedPreferencesHelper(context: Context) {
         editor.putBoolean("is_logged_in", isLoggedIn)
         editor.apply()
     }
+    fun setRegistered(isRegistered: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("is_registered", isRegistered)
+        editor.apply()
+    }
 
+    fun isRegistered(): Boolean {
+        return sharedPreferences.getBoolean("is_registered", false)
+    }
     fun isLoggedIn(): Boolean {
         return sharedPreferences.getBoolean("is_logged_in", false)
     }
