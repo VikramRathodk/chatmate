@@ -1,31 +1,34 @@
 package com.devvikram.chatmate
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.service.controls.ControlsProviderService.TAG
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.devvikram.chatmate.databinding.ActivityMainBinding
-import com.devvikram.chatmate.repository.UserRepositoryImpl
-import com.devvikram.chatmate.usercases.UseUseCaseImpl
-import com.devvikram.chatmate.usercases.UserUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var userUseCase: UserUseCase
+    private val firestore = FirebaseFirestore.getInstance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val sharedPreferencesHelper = SharedPreferencesHelper(applicationContext)
-        val userRepository = UserRepositoryImpl(sharedPreferencesHelper)
-        userUseCase = UseUseCaseImpl(userRepository)
 
+
+        firestore.collection("conversation").get().addOnSuccessListener {
+            val list = it.documents
+            list.forEach {
+                val message = it.getString("msg")
+                Log.d(TAG, "onCreate: $message")
+            }
+            
+        }.addOnFailureListener {
+
+        }
 
         binding.logout.setOnClickListener {
             AlertDialog.Builder(this)
@@ -43,20 +46,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                userUseCase.logout()
-                withContext(Dispatchers.Main) {
-//                    finish() this actiity so that it goes to login page
-                    startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                    finish()
-                    Toast.makeText(this@MainActivity, "Logged Out", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, e.localizedMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+
     }
 }

@@ -2,50 +2,64 @@ package com.devvikram.chatmate
 
 import android.content.Intent
 import android.os.Bundle
-import android.service.controls.ControlsProviderService.TAG
-import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.devvikram.chatmate.databinding.ActivityLoginBinding
+import com.devvikram.chatmate.models.LoginResponse
 import com.devvikram.chatmate.models.Users
-import com.devvikram.chatmate.repository.UserRepositoryImpl
-import com.devvikram.chatmate.usercases.UseUseCaseImpl
-import com.devvikram.chatmate.usercases.UserUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var userUseCase: UserUseCase
+    private val authViewModel: AuthViewModel by viewModels {
+        AuthViewModelFactory((application as MyApplication).authRepository)
+    }
+    private val firestore = FirebaseFirestore.getInstance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sharedPreferencesHelper = SharedPreferencesHelper(applicationContext)
-        val userRepository = UserRepositoryImpl(sharedPreferencesHelper)
-        userUseCase = UseUseCaseImpl(userRepository)
 
-        if (userUseCase.isLoggedIn()) {
-            Log.d(TAG, "onCreate: already login")
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+
         binding.loginBtn.setOnClickListener {
-            if (binding.email.text.toString().isEmpty()) {
+            val email = binding.email.text.toString()
+            val password = binding.password.text.toString()
+
+            if (email.isEmpty()) {
                 binding.email.error = "Enter your email"
                 return@setOnClickListener
             }
-            if (binding.password.text.toString().isEmpty()) {
+            if (password.isEmpty()) {
                 binding.password.error = "Enter your password"
                 return@setOnClickListener
             }
-            authenticateUser(binding.email.text.toString(), binding.password.text.toString())
+
+            showLoading(true)
+            binding.loginBtn.setCompleted(false, withAnimation = true)
+            val user = Users(email, password)
+            authViewModel.loginUser(user)
+
+        }
+        authViewModel.loginState.observe(this) { response ->
+            showLoading(false)
+
+            when (response) {
+                is LoginResponse.Success -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    binding.loginBtn.setCompleted(true, withAnimation = true)
+                }
+
+                is LoginResponse.Error -> {
+                    Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         binding.navigateToRegisterBtn.setOnClickListener {
@@ -54,41 +68,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun authenticateUser(email: String, password: String) {
-        val user = Users(email, password)
-        login(user)
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.loginBtn.isEnabled = !isLoading
+        binding.email.isEnabled = !isLoading
+        binding.password.isEnabled = !isLoading
     }
 
-    private fun login(user: Users) {
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val loginSuccess = userUseCase.login(user)
-                Log.d(TAG, "login: login status is _ :: $loginSuccess")
-                // Switch back to the main thread
-                withContext(Dispatchers.Main) {
-                    if (loginSuccess) {
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                        binding.loginBtn.setCompleted(true,true)
-                    } else {
-                        binding.loginBtn.setCompleted(false,true)
-                        Toast.makeText(this@LoginActivity, "Login Failed", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Exception occurred " + e.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-
-    }
 }

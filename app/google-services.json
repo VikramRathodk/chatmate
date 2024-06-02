@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1079931645928",
+    "project_id": "chatmate-bd701",
+    "storage_bucket": "chatmate-bd701.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079931645928:android:ad59adde6cf0793533be5d",
+        "android_client_info": {
+          "package_name": "com.devvikram.chatmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzo-zHk5fRrDC3-ooEaRHu5jFzZTqPusc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

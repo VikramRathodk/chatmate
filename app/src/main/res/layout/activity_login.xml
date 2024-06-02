@@ -101,6 +101,14 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
         <com.ncorti.slidetoact.SlideToActView
             android:id="@+id/login_btn"
             style="@style/Widget.Material3.Button.ElevatedButton"

@@ -57,4 +57,10 @@ class UserFragment : Fragment() {
                 }
             }
     }
+
+    fun loadUserData(){
+
+    }
+
+
 }
