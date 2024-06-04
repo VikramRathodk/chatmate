@@ -1,13 +1,17 @@
 package com.devvikram.chatmate.fragments
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.service.controls.ControlsProviderService.TAG
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.devvikram.chatmate.ChatActivity
 import com.devvikram.chatmate.UserAdapter
 import com.devvikram.chatmate.databinding.FragmentUserBinding
 import com.devvikram.chatmate.models.Users
@@ -46,23 +50,23 @@ class UserFragment : Fragment() {
     ): View? {
         binding = FragmentUserBinding.inflate(layoutInflater)
         val userList = mutableListOf<Users>()
-        userList.add(Users("Iron Mam",""))
-        userList.add(Users("Captain America",""))
-        userList.add(Users("Buckey Barnes",""))
-        userList.add(Users("Doctor Strange",""))
-        userList.add(Users("Thor",""))
-        userList.add(Users("Vision",""))
-        userList.add(Users("Groot",""))
-        userList.add(Users("Drax",""))
-        userList.add(Users("Black Panthe",""))
-        userList.add(Users("Hawkeye",""))
-        userList.add(Users("Spider-Man",""))
-        userList.add(Users("Scarlet Witch",""))
-        userList.add(Users("Rocket",""))
-        userList.add(Users("Bruce Bannner",""))
-        userList.add(Users("Falcon",""))
-        userList.add(Users("Gamora",""))
-        userList.add(Users("Ant-Man",""))
+        userList.add(Users("Tony stark","Iron Mam","Tony stark"))
+        userList.add(Users("Captain America","","Steve Job"))
+        userList.add(Users("Buckey Barnes","","Winter Soldier"))
+        userList.add(Users("Doctor Strange","","Steven Strange"))
+        userList.add(Users("Thor","", "Thor Odinson"))
+        userList.add(Users("Vision","","Vision"))
+        userList.add(Users("Groot","","I am Groot"))
+        userList.add(Users("Drax","", "Drax the Destroyer"))
+        userList.add(Users("Black Panthe","", "Black Panther"))
+        userList.add(Users("Hawkeye","","Clint Barton"))
+        userList.add(Users("Spider-Man","","Peter Parker"))
+        userList.add(Users("Scarlet Witch","","Wanda Maximoff"))
+        userList.add(Users("Rocket","","Rocket Raccoon"))
+        userList.add(Users("Hulk","", "Bruce Banner"))
+        userList.add(Users("Falcon","", "Falcon"))
+        userList.add(Users("Gamora","", "Gamora"))
+        userList.add(Users("Ant-Man","", "Scott Lang"))
 
         val layoutManager = LinearLayoutManager(requireContext())
         binding.userRecyclerview.layoutManager = layoutManager
@@ -70,8 +74,13 @@ class UserFragment : Fragment() {
         binding.userRecyclerview.adapter = adapter
 
        adapter.setOnItemClickListener(object : UserAdapter.onItemClickListener{
+           @RequiresApi(Build.VERSION_CODES.R)
            override fun onItemSelected(position: Int) {
                val selectedUser = userList[position]
+               val intent = Intent(requireContext(), ChatActivity::class.java)
+               intent.putExtra("name",selectedUser.username)
+               intent.putExtra("email",selectedUser.email)
+               startActivity(intent)
                Log.d(TAG, "onItemSelected: \"Selected User: ${selectedUser.email}\"")
            }
        })

@@ -10,7 +10,7 @@ import com.devvikram.chatmate.fragments.UserFragment
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private val firestore = FirebaseFirestore.getInstance()
 
 
