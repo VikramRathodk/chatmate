@@ -1,5 +1,6 @@
 package com.devvikram.chatmate
 
+import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,7 +23,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         _registrationState.value = authRepository.register(user)
     }
 
-    fun loginUser(user: Users) = viewModelScope.launch {
-        _loginState.value = authRepository.login(user)
+    fun loginUser(user: Users,activity: Activity) = viewModelScope.launch {
+        _loginState.value = authRepository.login(user,activity)
     }
 }

@@ -25,8 +25,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         binding.loginBtn.setOnClickListener {
             val email = binding.email.text.toString()
             val password = binding.password.text.toString()
@@ -43,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
             showLoading(true)
             binding.loginBtn.setCompleted(false, withAnimation = true)
             val user = Users(email, password)
-            authViewModel.loginUser(user)
+            authViewModel.loginUser(user, this)
 
         }
         authViewModel.loginState.observe(this) { response ->

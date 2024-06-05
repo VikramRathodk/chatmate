@@ -10,10 +10,10 @@ import retrofit2.http.POST
 interface ApiInterface {
 
     @FormUrlEncoded
-    @POST("login")
+    @POST("user_login_new.php")
     suspend fun loginUser(
-        @Field("email") email: String,
-        @Field("password") password: String
+        @Field("us_username") email: String,
+        @Field("us_password") password: String
     ): Response<LoginResponse>
 
     @FormUrlEncoded

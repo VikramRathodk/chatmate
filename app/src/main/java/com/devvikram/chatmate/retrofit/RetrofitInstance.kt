@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitInstance {
     companion object {
-        private const val BASE_URL: String = "https://192.168.0.104:80/practicephp/"
+        private const val BASE_URL: String = "https://bcstep.com/bcsteperp/bcstep_apis/"
 
         private val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
             this.level = HttpLoggingInterceptor.Level.BODY
