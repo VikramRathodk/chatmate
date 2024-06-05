@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                 val message = it.getString("msg")
                 Log.d(TAG, "onCreate: $message")
             }
-            
+
         }.addOnFailureListener {
 
         }
@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
+
 
     }
 }
