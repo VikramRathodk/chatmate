@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.support.annotations)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.ui.desktop)
     testImplementation(libs.junit)
 
     implementation(libs.firebase.bom)

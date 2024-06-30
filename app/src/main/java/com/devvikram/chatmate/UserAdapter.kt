@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.devvikram.chatmate.models.Users
+import de.hdodenhof.circleimageview.CircleImageView
 
-class UserAdapter(private val list: MutableList<Users>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
-    private var selectedPosition = -1
+class UserAdapter(private val list: List<Users>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
     private var listener: onItemClickListener? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.user_item_layout, parent, false)
@@ -19,7 +19,7 @@ class UserAdapter(private val list: MutableList<Users>) : RecyclerView.Adapter<U
         this.listener = listener
     }
     interface onItemClickListener{
-        fun onItemSelected (position: Int)
+        fun onItemSelected (users: Users,position: Int)
     }
 
     override fun getItemCount(): Int {
@@ -27,24 +27,20 @@ class UserAdapter(private val list: MutableList<Users>) : RecyclerView.Adapter<U
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        val user = list[position]
 
         holder.name.text = list[position].username
-
-//        if (selectedPosition == position){
-//            holder.itemView.setBackgroundColor(Color.GREEN)
-//        }else{
-//            holder.itemView.setBackgroundColor(Color.WHITE)
-//        }
-
+        holder.lastMessageTextView.text = list[position].email
         holder.itemView.setOnClickListener{
-//            selectedPosition = position
-            listener?.onItemSelected(position)
-            notifyDataSetChanged()
+            listener?.onItemSelected(user,position)
         }
     }
      class UserViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val name = view.findViewById<TextView>(R.id.name)!!
+        val name = view.findViewById<TextView>(R.id.username_textview)!!
+        val lastMessageTextView = view.findViewById<TextView>(R.id.last_message_textview)!!
+         val profileImageView = view.findViewById<CircleImageView>(R.id.user_profile_image)!!
+
 
     }
 }

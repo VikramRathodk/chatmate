@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitInstance {
     companion object {
-        private const val BASE_URL: String = "https://bcstep.com/bcsteperp/bcstep_apis/"
+        private const val BASE_URL: String = "https://chat-backend-6kc8.onrender.com/"
 
         private val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
             this.level = HttpLoggingInterceptor.Level.BODY
@@ -25,8 +25,11 @@ class RetrofitInstance {
                 .build()
         }
 
-        fun getApiService(): ApiInterface {
-            return retrofit.create(ApiInterface::class.java)
+        fun <T> createService(serviceClass: Class<T>): T {
+            return retrofit.create(serviceClass)
         }
+//        fun getApiService(): ApiInterface {
+//            return retrofit.create(ApiInterface::class.java)
+//        }
     }
 }

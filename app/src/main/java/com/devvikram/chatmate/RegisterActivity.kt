@@ -1,7 +1,9 @@
 package com.devvikram.chatmate
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -46,6 +48,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         viewModel.registrationState.observe(this) {response->
+            Log.d(TAG, "onCreate: response is :    "+response)
             if (response == null) {
                 return@observe
             }

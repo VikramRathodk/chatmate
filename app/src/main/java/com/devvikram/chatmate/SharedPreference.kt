@@ -13,15 +13,19 @@ class SharedPreference(context: Context) {
         editor.putBoolean("isLoggedIn", true)
         editor.putString("email", user.email)
         editor.putString("username", user.username)
+        editor.putString("user_id", user._id)
         editor.apply()
     }
 
     fun getUserEmail(): String? {
-        return sharedPreferences.getString("email", null)
+        return sharedPreferences.getString("email", "")
     }
 
     fun getUsername(): String? {
-        return sharedPreferences.getString("username", null)
+        return sharedPreferences.getString("username", "")
+    }
+    fun getUid(): String? {
+        return sharedPreferences.getString("user_id", "")
     }
 
     fun isLoggedIn(): Boolean {

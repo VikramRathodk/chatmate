@@ -26,5 +26,7 @@
     <color name="blue_200">#2269E1</color>
     //black and white color
     <color name="black">#000000</color>
+    <color name="edittext_stroke_color">#E0E0E0</color>
+
     <color name="white">#FFFFFF</color>
 </resources>

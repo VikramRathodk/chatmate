@@ -2,6 +2,8 @@ package com.devvikram.chatmate
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -25,6 +27,14 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        val isLoggedIn = authViewModel.isLoggedIn(this)
+        if (isLoggedIn) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         binding.loginBtn.setOnClickListener {
             val email = binding.email.text.toString()
             val password = binding.password.text.toString()
@@ -45,13 +55,17 @@ class LoginActivity : AppCompatActivity() {
 
         }
         authViewModel.loginState.observe(this) { response ->
-            showLoading(false)
 
             when (response) {
                 is LoginResponse.Success -> {
+                    showLoading(false)
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({
+                        binding.loginBtn.setCompleted(true, withAnimation = true)
+                    }, 1000)
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
-                    binding.loginBtn.setCompleted(true, withAnimation = true)
+                    finish()
                 }
 
                 is LoginResponse.Error -> {
