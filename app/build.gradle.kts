@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.support.annotations)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.androidx.ui.desktop)
+    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
 
     implementation(libs.firebase.bom)
@@ -70,6 +71,9 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$room_version")
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+
+    implementation ("com.squareup.picasso:picasso:2.8")
+    implementation ("com.otaliastudios:cameraview:2.7.2")
 
 
     androidTestImplementation(libs.androidx.junit)

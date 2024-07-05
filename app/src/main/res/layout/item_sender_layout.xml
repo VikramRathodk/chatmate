@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/sender_bubble_background"
-        android:padding="12dp">
+        android:padding="4dp">
 
         <TextView
             android:id="@+id/message_textview"
@@ -18,25 +18,48 @@
             android:layout_height="wrap_content"
             android:text="Hello World!"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:minWidth="100dp"
+            android:minWidth="60dp"
             android:maxWidth="280dp"
+            android:paddingStart="4dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="1.0" />
+             />
 
         <TextView
             android:id="@+id/text_time_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="12:45 pm"
-            android:textSize="12sp"
+            android:textSize="11sp"
             android:textStyle="italic"
             android:textColor="@android:color/black"
             app:layout_constraintTop_toBottomOf="@id/message_textview"
             app:layout_constraintEnd_toEndOf="@id/message_textview"
             android:layout_marginTop="4dp" />
+
+        <ImageView
+            android:id="@+id/pending"
+            android:layout_width="15dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/pending_time_icon"
+            app:layout_constraintTop_toTopOf="@id/text_time_textview"
+            app:layout_constraintStart_toEndOf="@id/text_time_textview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <ImageView
+            android:id="@+id/deliverd"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="4dp"
+            android:visibility="gone"
+            android:src="@drawable/outline_done_24"
+            app:layout_constraintTop_toTopOf="@id/text_time_textview"
+            app:layout_constraintStart_toEndOf="@id/text_time_textview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -9,7 +9,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -24,11 +23,14 @@ import com.devvikram.chatmate.conversation.MessageViewModel
 import com.devvikram.chatmate.conversation.MessageViewModelFactory
 import com.devvikram.chatmate.databinding.ActivityChatBinding
 import com.devvikram.chatmate.models.Conversation
+import com.devvikram.chatmate.models.DocumentModel
+import com.devvikram.chatmate.util.CameraActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.io.File
 import java.io.FileOutputStream
 
 class ChatActivity : AppCompatActivity() {
+
     private val CAMERA_REQUEST_CODE = 2001
     private val CAMERA_PERMISSION_CODE = 2000
     private lateinit var binding: ActivityChatBinding
@@ -36,6 +38,8 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var senderRoomId: String
     private lateinit var receiverRoomId: String
     private lateinit var conversationAdapter: ConversationAdapter
+    private val documentFileList = ArrayList<DocumentModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +59,11 @@ class ChatActivity : AppCompatActivity() {
 
         binding.userName.text = receiverName
         binding.userEmail.text = receiverEmail
+        binding.userName.setOnClickListener{
+            Log.d(TAG, "onCreate: button clicked")
+            val intent =  Intent(this,ImagePreviewChatActivity::class.java)
+            startActivity(intent)
+        }
 
         setupRecyclerView()
         observeViewModel()
@@ -109,14 +118,29 @@ class ChatActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap?
-            Log.d(TAG, "onActivityResult: $imageBitmap")
-            if (imageBitmap != null) {
-                val imageUri = saveBitmapToFile(imageBitmap)
-                Log.d(TAG, "onActivityResult: file uri is :\n $imageUri")
+            documentFileList.clear()
+            val capturedImagesList: ArrayList<Uri>? = data?.getStringArrayListExtra("captured_images_list")?.map {
+                Uri.parse(it)
+            }?.toCollection(ArrayList())
+            capturedImagesList?.forEach {
+                val uriString = it.toString()
+                Log.d(TAG, "onActivityResult: $uriString")
+                documentFileList.add(DocumentModel(
+                    "filename.jpg",uriString,"image",true
+                ))
             }
+            showPreviewOfImage(documentFileList)
+            Log.d(TAG, "onActivityResult: image file size:  $capturedImagesList")
+            Log.d(TAG, "onActivityResult: document size:  ${documentFileList.size} ,,, $documentFileList")
+
         }
     }
+    private fun showPreviewOfImage(documentFileList: ArrayList<DocumentModel>) {
+        val intent =  Intent(this,ImagePreviewChatActivity::class.java)
+        intent.putParcelableArrayListExtra("document_file_list",documentFileList)
+        startActivity(intent)
+    }
+
     private fun saveBitmapToFile(bitmap: Bitmap): Uri? {
         val directory = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "ChatMateImages")
         if (!directory.exists()) {
@@ -154,10 +178,12 @@ class ChatActivity : AppCompatActivity() {
         }
     }
     private fun startCameraIntent() {
+        val intent = Intent(this, CameraActivity::class.java)
+        startActivityForResult(intent, CAMERA_REQUEST_CODE)
         Toast.makeText(this, "Camera permission granted", Toast.LENGTH_SHORT).show()
 
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, CAMERA_REQUEST_CODE)
+//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        startActivityForResult(intent, CAMERA_REQUEST_CODE)
     }
     private fun observeViewModel() {
         messageViewModel.loadMessages(receiverRoomId)
