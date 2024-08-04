@@ -33,6 +33,7 @@ class ChatActivity : AppCompatActivity() {
 
     private val CAMERA_REQUEST_CODE = 2001
     private val CAMERA_PERMISSION_CODE = 2000
+    private val IMAGE_PREVIEW_REQUEST_CODE = 2002
     private lateinit var binding: ActivityChatBinding
     private lateinit var messageViewModel: MessageViewModel
     private lateinit var senderRoomId: String
@@ -47,7 +48,7 @@ class ChatActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val factory = MessageViewModelFactory()
-        messageViewModel = ViewModelProvider(this, factory).get(MessageViewModel::class.java)
+        messageViewModel = ViewModelProvider(this, factory)[MessageViewModel::class.java]
 
         val intent = intent
         val receiverID = intent.getStringExtra("receiver_id")
@@ -83,9 +84,6 @@ class ChatActivity : AppCompatActivity() {
             showCamera()
         }
 
-//        binding.chatMessageEdittext.addTextChangedListener {
-//            handleCameraIconVisibility(it.toString())
-//        }
     }
 
     private fun showCamera() {
@@ -117,28 +115,46 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            documentFileList.clear()
-            val capturedImagesList: ArrayList<Uri>? = data?.getStringArrayListExtra("captured_images_list")?.map {
-                Uri.parse(it)
-            }?.toCollection(ArrayList())
-            capturedImagesList?.forEach {
-                val uriString = it.toString()
-                Log.d(TAG, "onActivityResult: $uriString")
-                documentFileList.add(DocumentModel(
-                    "filename.jpg",uriString,"image",true
-                ))
-            }
-            showPreviewOfImage(documentFileList)
-            Log.d(TAG, "onActivityResult: image file size:  $capturedImagesList")
-            Log.d(TAG, "onActivityResult: document size:  ${documentFileList.size} ,,, $documentFileList")
+        if(resultCode == Activity.RESULT_OK){
+            if (requestCode == CAMERA_REQUEST_CODE) {
+                documentFileList.clear()
+                val capturedImagesList: ArrayList<Uri>? = data?.getStringArrayListExtra("captured_images_list")?.map {
+                    Uri.parse(it)
+                }?.toCollection(ArrayList())
+                capturedImagesList?.forEach {
+                    val uriString = it.toString()
+                    Log.d(TAG, "onActivityResult: $uriString")
+                    documentFileList.add(DocumentModel(
+                        "filename.jpg",uriString,"image",true
+                    ))
+                }
+                showPreviewOfImage(documentFileList)
+                Log.d(TAG, "onActivityResult: image file size:  $capturedImagesList")
+                Log.d(TAG, "onActivityResult: document size:  ${documentFileList.size} ,,, $documentFileList")
 
+
+            }
+            if(requestCode == IMAGE_PREVIEW_REQUEST_CODE){
+                val documentFileList = data?.getParcelableArrayListExtra<DocumentModel>("document_file_list")
+                val captionText = data?.getStringExtra("caption");
+                if (documentFileList != null) {
+                    sendImages(captionText,documentFileList)
+                }
+            }
         }
     }
+
+    private fun sendImages(captionText:String?,documentFileList: java.util.ArrayList<DocumentModel>) {
+        documentFileList.map {
+            documentModel ->
+            messageViewModel.setMessageWithAttachment(captionText!!,documentModel,senderRoomId,receiverRoomId,applicationContext);
+        }
+    }
+
     private fun showPreviewOfImage(documentFileList: ArrayList<DocumentModel>) {
         val intent =  Intent(this,ImagePreviewChatActivity::class.java)
         intent.putParcelableArrayListExtra("document_file_list",documentFileList)
-        startActivity(intent)
+        startActivityForResult(intent,IMAGE_PREVIEW_REQUEST_CODE);
     }
 
     private fun saveBitmapToFile(bitmap: Bitmap): Uri? {
@@ -181,9 +197,6 @@ class ChatActivity : AppCompatActivity() {
         val intent = Intent(this, CameraActivity::class.java)
         startActivityForResult(intent, CAMERA_REQUEST_CODE)
         Toast.makeText(this, "Camera permission granted", Toast.LENGTH_SHORT).show()
-
-//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//        startActivityForResult(intent, CAMERA_REQUEST_CODE)
     }
     private fun observeViewModel() {
         messageViewModel.loadMessages(receiverRoomId)
@@ -204,6 +217,8 @@ class ChatActivity : AppCompatActivity() {
             senderId = SharedPreference(applicationContext).getUid().toString(),
             receiverId = receiverRoomId,
             message = message,
+            fileUrl = "",
+            messageType = "text",
             timestamp = System.currentTimeMillis(),
             isRead = true
         )

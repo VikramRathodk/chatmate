@@ -12,9 +12,21 @@
         android:background="@drawable/sender_bubble_background"
         android:padding="4dp">
 
+
+        <ImageView
+            android:id="@+id/file_preview_imageview"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            android:src="@drawable/image_item_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
         <TextView
             android:id="@+id/message_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Hello World!"
             android:textColor="@android:color/black"
@@ -22,8 +34,8 @@
             android:maxWidth="280dp"
             android:paddingStart="4dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-             />
+            app:layout_constraintTop_toBottomOf="@id/file_preview_imageview"
+            />
 
         <TextView
             android:id="@+id/text_time_textview"
@@ -42,6 +54,7 @@
             android:layout_width="15dp"
             android:layout_height="12dp"
             android:layout_marginStart="4dp"
+            android:visibility="gone"
             android:src="@drawable/pending_time_icon"
             app:layout_constraintTop_toTopOf="@id/text_time_textview"
             app:layout_constraintStart_toEndOf="@id/text_time_textview"
@@ -53,7 +66,6 @@
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_marginStart="4dp"
-            android:visibility="gone"
             android:src="@drawable/outline_done_24"
             app:layout_constraintTop_toTopOf="@id/text_time_textview"
             app:layout_constraintStart_toEndOf="@id/text_time_textview"

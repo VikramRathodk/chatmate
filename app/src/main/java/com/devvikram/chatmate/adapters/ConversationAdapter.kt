@@ -5,10 +5,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.devvikram.chatmate.R
 import com.devvikram.chatmate.models.Conversation
+import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -65,10 +67,17 @@ class ConversationAdapter(private val context: Context) :
     inner class SenderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textMessageTextview: TextView = itemView.findViewById(R.id.message_textview)
         private val textMessageTime: TextView = itemView.findViewById(R.id.text_time_textview)
+        private val filePreviewImageView:ImageView = itemView.findViewById(R.id.file_preview_imageview)
 
         fun bind(conversation: Conversation) {
             textMessageTextview.text = conversation.message
             textMessageTime.text = formatTime(conversation.timestamp)
+            if(conversation.fileUrl.isNotEmpty()){
+                filePreviewImageView.visibility = View.VISIBLE
+                Picasso.get().load(conversation.fileUrl).placeholder(R.drawable.ic_document).into(filePreviewImageView)
+            }else{
+                filePreviewImageView.visibility = View.GONE
+            }
         }
 
         private fun formatTime(timestamp: Long): String {

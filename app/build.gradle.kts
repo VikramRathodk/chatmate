@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.androidx.ui.desktop)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.firebase.storage.ktx)
     testImplementation(libs.junit)
 
     implementation(libs.firebase.bom)
@@ -75,6 +76,7 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:2.8")
     implementation ("com.otaliastudios:cameraview:2.7.2")
 
+    implementation("com.google.firebase:firebase-storage")
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
