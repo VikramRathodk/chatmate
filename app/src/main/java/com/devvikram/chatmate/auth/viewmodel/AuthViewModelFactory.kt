@@ -1,4 +1,4 @@
-package com.devvikram.chatmate
+package com.devvikram.chatmate.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

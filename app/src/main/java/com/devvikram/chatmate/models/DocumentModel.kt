@@ -7,13 +7,16 @@ data class DocumentModel(
     val fileName: String,
     val uri: String,
     val fileType: String,
-    val isDeleteEnabled: Boolean
+    val isDeleteEnabled: Boolean,
+    var caption: String = ""
+
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString()!!,
-        parcel.readByte() != 0.toByte()
+        parcel.readByte() != 0.toByte(),
+        parcel.readString()!!
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -21,6 +24,8 @@ data class DocumentModel(
         parcel.writeString(uri)
         parcel.writeString(fileType)
         parcel.writeByte(if (isDeleteEnabled) 1 else 0)
+        parcel.writeString(caption)
+
     }
 
     override fun describeContents(): Int {

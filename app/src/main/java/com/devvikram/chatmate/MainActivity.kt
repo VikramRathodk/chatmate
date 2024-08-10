@@ -3,8 +3,6 @@ package com.devvikram.chatmate
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.service.controls.ControlsProviderService.TAG
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MenuInflater
@@ -18,6 +16,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.devvikram.chatmate.auth.activities.LoginActivity
+import com.devvikram.chatmate.auth.viewmodel.AuthViewModel
+import com.devvikram.chatmate.auth.viewmodel.AuthViewModelFactory
 import com.devvikram.chatmate.databinding.ActivityMainBinding
 import com.devvikram.chatmate.fragments.UserFragment
 import com.google.firebase.firestore.FirebaseFirestore
@@ -64,17 +65,6 @@ class MainActivity : AppCompatActivity() {
             true
             }
 
-
-        firestore.collection("conversation").get().addOnSuccessListener {
-            val list = it.documents
-            list.forEach {
-                val message = it.getString("msg")
-                Log.d(TAG, "onCreate: $message")
-            }
-
-        }.addOnFailureListener {
-
-        }
 
     }
     private fun showCustomPopupMenu(view: View) {

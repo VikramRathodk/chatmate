@@ -1,17 +1,18 @@
-package com.devvikram.chatmate
+package com.devvikram.chatmate.auth.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.devvikram.chatmate.auth.viewmodel.AuthViewModel
+import com.devvikram.chatmate.auth.viewmodel.AuthViewModelFactory
+import com.devvikram.chatmate.MainActivity
+import com.devvikram.chatmate.MyApplication
 import com.devvikram.chatmate.databinding.ActivityLoginBinding
-import com.devvikram.chatmate.models.LoginResponse
-import com.devvikram.chatmate.models.Users
-import com.google.firebase.firestore.FirebaseFirestore
+import com.devvikram.chatmate.retrofit.model.LoginResponse
+import com.devvikram.chatmate.retrofit.model.Users
 
 
 class LoginActivity : AppCompatActivity() {
@@ -19,7 +20,6 @@ class LoginActivity : AppCompatActivity() {
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory((application as MyApplication).authRepository)
     }
-    private val firestore = FirebaseFirestore.getInstance()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,8 +48,7 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            showLoading(true)
-            binding.loginBtn.setCompleted(false, withAnimation = true)
+            showProgress()
             val user = Users(email, password)
             authViewModel.loginUser(user, this)
 
@@ -58,18 +57,17 @@ class LoginActivity : AppCompatActivity() {
 
             when (response) {
                 is LoginResponse.Success -> {
-                    showLoading(false)
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.postDelayed({
-                        binding.loginBtn.setCompleted(true, withAnimation = true)
-                    }, 1000)
+
+                    hideProgress()
+                    Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
 
                 is LoginResponse.Error -> {
-                    Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
+                    hideProgress()
+                    Toast.makeText(this, response.message.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -79,12 +77,13 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
-    private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        binding.loginBtn.isEnabled = !isLoading
-        binding.email.isEnabled = !isLoading
-        binding.password.isEnabled = !isLoading
+    private fun showProgress(){
+        binding.loginBtn.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
+    }
+    private fun hideProgress(){
+        binding.loginBtn.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
     }
 
 }

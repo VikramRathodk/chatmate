@@ -35,16 +35,16 @@
             android:name=".ImagePreviewChatActivity"
             android:exported="false" />
         <activity
-            android:name=".ChatActivity"
+            android:name=".conversation.ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".auth.activities.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".auth.activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

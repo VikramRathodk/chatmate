@@ -1,11 +1,12 @@
-package com.devvikram.chatmate
+package com.devvikram.chatmate.auth.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.devvikram.chatmate.models.Users
+import com.devvikram.chatmate.R
+import com.devvikram.chatmate.retrofit.model.Users
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserAdapter(private val list: List<Users>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
@@ -19,7 +20,7 @@ class UserAdapter(private val list: List<Users>) : RecyclerView.Adapter<UserAdap
         this.listener = listener
     }
     interface onItemClickListener{
-        fun onItemSelected (users: Users,position: Int)
+        fun onItemSelected (users: Users, position: Int)
     }
 
     override fun getItemCount(): Int {

@@ -9,7 +9,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.devvikram.chatmate.models.Conversation
+import com.devvikram.chatmate.conversation.model.Conversation
 import com.devvikram.chatmate.models.DocumentModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -61,7 +61,6 @@ class MessageViewModel : ViewModel() {
     }
 
     fun setMessageWithAttachment(
-        captionText: String,
         documentModel: DocumentModel,
         senderRoomId: String,
         receiverRoomId: String,
@@ -73,7 +72,7 @@ class MessageViewModel : ViewModel() {
                 messageId = messageId,
                 senderId = SharedPreference(applicationContext).getUid().toString(),
                 receiverId = receiverRoomId,
-                message = captionText,
+                message = documentModel.caption,
                 fileUrl = fileUrl,
                 messageType = documentModel.fileType,
                 timestamp = System.currentTimeMillis(),

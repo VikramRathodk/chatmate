@@ -1,4 +1,4 @@
-package com.devvikram.chatmate
+package com.devvikram.chatmate.conversation
 
 import SharedPreference
 import android.app.Activity
@@ -18,11 +18,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.devvikram.chatmate.adapters.ConversationAdapter
-import com.devvikram.chatmate.conversation.MessageViewModel
-import com.devvikram.chatmate.conversation.MessageViewModelFactory
+import com.devvikram.chatmate.ImagePreviewChatActivity
+import com.devvikram.chatmate.R
 import com.devvikram.chatmate.databinding.ActivityChatBinding
-import com.devvikram.chatmate.models.Conversation
+import com.devvikram.chatmate.conversation.model.Conversation
 import com.devvikram.chatmate.models.DocumentModel
 import com.devvikram.chatmate.util.CameraActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -62,7 +61,7 @@ class ChatActivity : AppCompatActivity() {
         binding.userEmail.text = receiverEmail
         binding.userName.setOnClickListener{
             Log.d(TAG, "onCreate: button clicked")
-            val intent =  Intent(this,ImagePreviewChatActivity::class.java)
+            val intent =  Intent(this, ImagePreviewChatActivity::class.java)
             startActivity(intent)
         }
 
@@ -136,23 +135,22 @@ class ChatActivity : AppCompatActivity() {
             }
             if(requestCode == IMAGE_PREVIEW_REQUEST_CODE){
                 val documentFileList = data?.getParcelableArrayListExtra<DocumentModel>("document_file_list")
-                val captionText = data?.getStringExtra("caption");
                 if (documentFileList != null) {
-                    sendImages(captionText,documentFileList)
+                    sendImages(documentFileList)
                 }
             }
         }
     }
 
-    private fun sendImages(captionText:String?,documentFileList: java.util.ArrayList<DocumentModel>) {
+    private fun sendImages(documentFileList: java.util.ArrayList<DocumentModel>) {
         documentFileList.map {
             documentModel ->
-            messageViewModel.setMessageWithAttachment(captionText!!,documentModel,senderRoomId,receiverRoomId,applicationContext);
+            messageViewModel.setMessageWithAttachment(documentModel,senderRoomId,receiverRoomId,applicationContext);
         }
     }
 
     private fun showPreviewOfImage(documentFileList: ArrayList<DocumentModel>) {
-        val intent =  Intent(this,ImagePreviewChatActivity::class.java)
+        val intent =  Intent(this, ImagePreviewChatActivity::class.java)
         intent.putParcelableArrayListExtra("document_file_list",documentFileList)
         startActivityForResult(intent,IMAGE_PREVIEW_REQUEST_CODE);
     }

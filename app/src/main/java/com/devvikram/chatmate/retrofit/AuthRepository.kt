@@ -5,9 +5,9 @@ import android.app.Activity
 import android.content.ContentValues.TAG
 import android.util.Log
 import com.devvikram.chatmate.MyApplication
-import com.devvikram.chatmate.models.LoginResponse
-import com.devvikram.chatmate.models.RegistrationResponse
-import com.devvikram.chatmate.models.Users
+import com.devvikram.chatmate.retrofit.model.LoginResponse
+import com.devvikram.chatmate.retrofit.model.RegistrationResponse
+import com.devvikram.chatmate.retrofit.model.Users
 import com.google.gson.JsonParseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -56,6 +56,7 @@ class AuthRepository(private val apiInterface: ApiInterface, activity: MyApplica
                             saveUserData(loginRes.user, activity)
                             LoginResponse.Success("Login Successful")
                         } else {
+                            Log.d(TAG, "login: res--->  ${loginRes.message}")
                             LoginResponse.Error(loginRes.message ?: "Unknown error")
                         }
                     } else {

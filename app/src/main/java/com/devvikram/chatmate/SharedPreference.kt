@@ -1,5 +1,5 @@
 import android.content.Context
-import com.devvikram.chatmate.models.Users
+import com.devvikram.chatmate.retrofit.model.Users
 
 class SharedPreference(context: Context) {
     companion object {

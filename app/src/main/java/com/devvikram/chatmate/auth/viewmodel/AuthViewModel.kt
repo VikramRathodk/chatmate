@@ -1,4 +1,4 @@
-package com.devvikram.chatmate
+package com.devvikram.chatmate.auth.viewmodel
 
 import SharedPreference
 import android.app.Activity
@@ -7,9 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devvikram.chatmate.models.LoginResponse
-import com.devvikram.chatmate.models.RegistrationResponse
-import com.devvikram.chatmate.models.Users
+import com.devvikram.chatmate.retrofit.model.LoginResponse
+import com.devvikram.chatmate.retrofit.model.RegistrationResponse
+import com.devvikram.chatmate.retrofit.model.Users
 import com.devvikram.chatmate.retrofit.AuthRepository
 import kotlinx.coroutines.launch
 import retrofit2.Call

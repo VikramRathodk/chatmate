@@ -1,4 +1,4 @@
-package com.devvikram.chatmate.adapters
+package com.devvikram.chatmate.conversation
 
 import SharedPreference
 import android.content.Context
@@ -7,9 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.devvikram.chatmate.R
-import com.devvikram.chatmate.models.Conversation
+import com.devvikram.chatmate.conversation.model.Conversation
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -72,11 +73,19 @@ class ConversationAdapter(private val context: Context) :
         fun bind(conversation: Conversation) {
             textMessageTextview.text = conversation.message
             textMessageTime.text = formatTime(conversation.timestamp)
+            val params = textMessageTextview.layoutParams as ConstraintLayout.LayoutParams
+
             if(conversation.fileUrl.isNotEmpty()){
                 filePreviewImageView.visibility = View.VISIBLE
+                params.width = 0
+                params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+                textMessageTextview.layoutParams = params
                 Picasso.get().load(conversation.fileUrl).placeholder(R.drawable.ic_document).into(filePreviewImageView)
             }else{
                 filePreviewImageView.visibility = View.GONE
+                params.width = ConstraintLayout.LayoutParams.MATCH_PARENT
+                params.endToEnd = ConstraintLayout.LayoutParams.UNSET
+                textMessageTextview.layoutParams = params
             }
         }
 

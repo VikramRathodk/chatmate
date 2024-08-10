@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
     android:orientation="vertical"
-    tools:context=".LoginActivity">
+    tools:context=".auth.activities.LoginActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
         android:layout_marginTop="16dp"
         android:background="?attr/colorSurface"
         android:padding="4dp"
-        android:src="@drawable/logo" />
+        android:src="@drawable/chatmate_logo" />
 
     <TextView
         android:layout_width="match_parent"
@@ -101,34 +101,28 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-
-        <com.ncorti.slidetoact.SlideToActView
-            android:id="@+id/login_btn"
-            style="@style/Widget.Material3.Button.ElevatedButton"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:animation_duration="650"
-            app:border_radius="30dp"
-            app:bounce_on_start="true"
-            app:elevation="6dp"
-            app:icon_margin="2dp"
-            app:inner_color="?attr/colorOnSurface"
-            app:outer_color="?attr/colorPrimary"
-            app:rotate_icon="true"
-            app:slider_height="40dp"
-            app:slider_locked="true"
-            app:text="Sign In"
-            app:text_color="?attr/colorOnSurface"
-            app:text_size="18sp"
-            app:text_style="bold" />
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/login_btn"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/login" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"

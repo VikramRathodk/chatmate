@@ -1,4 +1,4 @@
-package com.devvikram.chatmate.models
+package com.devvikram.chatmate.retrofit.model
 
 
 data class RegistrationRes(

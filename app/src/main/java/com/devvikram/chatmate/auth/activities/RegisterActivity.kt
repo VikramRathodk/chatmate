@@ -1,4 +1,4 @@
-package com.devvikram.chatmate
+package com.devvikram.chatmate.auth.activities
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -7,9 +7,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.devvikram.chatmate.auth.viewmodel.AuthViewModel
+import com.devvikram.chatmate.auth.viewmodel.AuthViewModelFactory
+import com.devvikram.chatmate.MyApplication
 import com.devvikram.chatmate.databinding.ActivityRegisterBinding
-import com.devvikram.chatmate.models.RegistrationResponse
-import com.devvikram.chatmate.models.Users
+import com.devvikram.chatmate.retrofit.model.RegistrationResponse
+import com.devvikram.chatmate.retrofit.model.Users
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding

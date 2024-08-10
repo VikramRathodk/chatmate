@@ -10,15 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.devvikram.chatmate.AuthViewModel
-import com.devvikram.chatmate.AuthViewModelFactory
-import com.devvikram.chatmate.ChatActivity
+import com.devvikram.chatmate.auth.viewmodel.AuthViewModel
+import com.devvikram.chatmate.auth.viewmodel.AuthViewModelFactory
+import com.devvikram.chatmate.conversation.ChatActivity
 import com.devvikram.chatmate.MyApplication
-import com.devvikram.chatmate.UserAdapter
+import com.devvikram.chatmate.auth.adapters.UserAdapter
 import com.devvikram.chatmate.databinding.FragmentUserBinding
-import com.devvikram.chatmate.models.Users
-import com.google.firebase.firestore.FirebaseFirestore
+import com.devvikram.chatmate.retrofit.model.Users
 
 
 private const val ARG_PARAM1 = "param1"
@@ -26,9 +26,6 @@ private const val ARG_PARAM1 = "param1"
 class UserFragment : Fragment() {
 
     private lateinit var binding: FragmentUserBinding
-    private val fireStore = FirebaseFirestore.getInstance()
-
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private lateinit var authViewModel: AuthViewModel
     private lateinit var adapter: UserAdapter
@@ -37,10 +34,7 @@ class UserFragment : Fragment() {
         super.onAttach(context)
         val appContext = context.applicationContext as MyApplication
         authViewModel =
-            ViewModelProvider(this, AuthViewModelFactory(appContext.authRepository)).get(
-                AuthViewModel::class.java
-            )
-
+            ViewModelProvider(this, AuthViewModelFactory(appContext.authRepository))[AuthViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +53,14 @@ class UserFragment : Fragment() {
         authViewModel.getAllUsers(requireActivity())
         val layoutManager = LinearLayoutManager(requireContext())
         binding.userRecyclerview.layoutManager = layoutManager
+        binding.userRecyclerview.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                layoutManager.orientation
+            )
+        )
+
+
         authViewModel.userListLiveData.observe(viewLifecycleOwner) {
             adapter = UserAdapter(it)
             binding.userRecyclerview.adapter = adapter
