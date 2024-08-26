@@ -3,6 +3,8 @@ package com.devvikram.chatmate.util
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -102,21 +104,31 @@ class DocumentAdapter(
         private val imagePreview: ImageView = itemView.findViewById(R.id.image_preview)
         private val fileNameTextView: TextView = itemView.findViewById(R.id.file_name_textview)
         private val deleteImageView: ImageView = itemView.findViewById(R.id.delete_imageview)
-        val captionEditTextView: EditText = itemView.findViewById(R.id.caption_textview)
-        val sendBtn: ImageView = itemView.findViewById(R.id.send_icon_btn)
+        private val captionEditTextView: EditText = itemView.findViewById(R.id.caption_textview)
+        private val sendBtn: ImageView = itemView.findViewById(R.id.send_icon_btn)
 
-        fun bind(documentModel: DocumentModel, documentList: ArrayList<DocumentModel>) {
+        fun bind(documentModel: DocumentModel,documentList: ArrayList<DocumentModel>) {
             fileNameTextView.text = documentModel.fileName
+            captionEditTextView.setText(documentModel.caption)
             Picasso.get().load(documentModel.uri).placeholder(R.drawable.ic_document).into(imagePreview)
 
             deleteImageView.setOnClickListener {
                 documentActionListener.onDeleteClick(documentModel)
             }
+            captionEditTextView.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    documentModel.caption = s.toString()
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            })
+
             sendBtn.setOnClickListener {
-                val caption = captionEditTextView.text.toString()
-                    documentModel.caption = caption
-                    documentActionListener.onDocumentSubmit(documentModel)
+                documentActionListener.onDocumentSubmit(documentModel)
             }
+
             itemView.setOnClickListener {
                 val context = itemView.context
                 val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_image_preview, null)
@@ -135,6 +147,7 @@ class DocumentAdapter(
             }
         }
     }
+
 
     private class PdfViewHolder(
         itemView: View,

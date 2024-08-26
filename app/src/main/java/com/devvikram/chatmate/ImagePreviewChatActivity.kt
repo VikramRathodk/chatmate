@@ -26,6 +26,8 @@ class ImagePreviewChatActivity : AppCompatActivity(), DocumentAdapter.DocumentAc
         viewPager = binding.imageViewPager
         viewPager.adapter = documentAdapter
 
+
+
     }
 
 

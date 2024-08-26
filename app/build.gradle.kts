@@ -59,6 +59,8 @@ dependencies {
     implementation("com.ncorti:slidetoact:0.11.0")
     implementation(libs.circleimageview)
     implementation("com.android.volley:volley:1.2.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2")
+
     implementation(libs.kotlinx.coroutines.core)
 
     implementation(libs.androidx.room.ktx)
@@ -66,6 +68,8 @@ dependencies {
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     // gson converter
+    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
+
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 

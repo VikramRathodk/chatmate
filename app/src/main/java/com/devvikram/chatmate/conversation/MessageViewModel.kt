@@ -6,7 +6,6 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.core.net.toUri
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.devvikram.chatmate.conversation.model.Conversation
@@ -18,14 +17,14 @@ import com.google.firebase.storage.StorageReference
 
 class MessageViewModel : ViewModel() {
 
-    private val _messages = MutableLiveData<List<Conversation>>()
+    private val _messages = MutableLiveData<List<Conversation>?>()
     private val firestore = FirebaseFirestore.getInstance()
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
     private val storageRef: StorageReference = storage.reference
 
     private var listenerRegistration: ListenerRegistration? = null
 
-    val messages: LiveData<List<Conversation>> get() = _messages
+    val messages: MutableLiveData<List<Conversation>?> get() = _messages
 
     fun sendMessage(message: Conversation, senderRoomId: String, receiverRoomId: String) {
         val senderRoomRef = firestore.collection("conversations").document(senderRoomId).collection("messages")
@@ -97,7 +96,7 @@ class MessageViewModel : ViewModel() {
                 return@addSnapshotListener
             }
             val messages = snapshot?.toObjects(Conversation::class.java)
-            _messages.value = messages
+            _messages.value = messages!!
         }
     }
 

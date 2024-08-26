@@ -1,5 +1,6 @@
 package com.devvikram.chatmate.conversation
 
+import ConversationAdapter
 import SharedPreference
 import android.app.Activity
 import android.content.ContentValues.TAG
@@ -10,7 +11,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -20,8 +20,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.devvikram.chatmate.ImagePreviewChatActivity
 import com.devvikram.chatmate.R
-import com.devvikram.chatmate.databinding.ActivityChatBinding
 import com.devvikram.chatmate.conversation.model.Conversation
+import com.devvikram.chatmate.databinding.ActivityChatBinding
 import com.devvikram.chatmate.models.DocumentModel
 import com.devvikram.chatmate.util.CameraActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -229,26 +229,5 @@ class ChatActivity : AppCompatActivity() {
 
         bottomSheetDialog.setContentView(view)
         bottomSheetDialog.show()
-    }
-
-    private fun handleCameraIconVisibility(text: String) {
-        val isVisible = text.isNotEmpty()
-        if (isVisible && binding.cameraIconBtn.visibility == View.VISIBLE) {
-            binding.cameraIconBtn.animate()
-                .translationX(-binding.cameraIconBtn.width.toFloat())
-                .setDuration(400)
-                .withEndAction {
-                    binding.cameraIconBtn.visibility = View.GONE
-                }
-        } else if (!isVisible && binding.cameraIconBtn.visibility == View.GONE) {
-            binding.cameraIconBtn.apply {
-                translationX = -width.toFloat()
-                visibility = View.VISIBLE
-                animate()
-                    .translationX(0f)
-                    .setDuration(400)
-                    .withEndAction(null)
-            }
-        }
     }
 }
