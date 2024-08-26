@@ -7,14 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devvikram.chatmate.retrofit.AuthRepository
 import com.devvikram.chatmate.retrofit.model.LoginResponse
 import com.devvikram.chatmate.retrofit.model.RegistrationResponse
 import com.devvikram.chatmate.retrofit.model.Users
-import com.devvikram.chatmate.retrofit.AuthRepository
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _registrationState = MutableLiveData<RegistrationResponse>()
@@ -46,24 +43,11 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _userListLiveData = MutableLiveData<List<Users>>()
     val userListLiveData: LiveData<List<Users>> get() = _userListLiveData
     fun getAllUsers(activity: Activity) = viewModelScope.launch {
-        val call = authRepository.getUsers(activity)
-        call.enqueue(object : Callback<List<Users>>{
-            override fun onResponse(call: Call<List<Users>>, response: Response<List<Users>>) {
-                if (response.isSuccessful){
-                    val userList  = response.body() ?: emptyList()
-                    val filterUserList = userList.filter { it.email != SharedPreference(activity).getUserEmail() }
-                    _userListLiveData.value = filterUserList
-                }else{
-                    _userListLiveData.value = emptyList()
-                }
-            }
-
-            override fun onFailure(call: Call<List<Users>>, t: Throwable) {
-                t.printStackTrace()
-                println("Error: ${t.message}")
-            }
-        })
+        val users = authRepository.getUsers(activity)
+        val filteredUsers = users.filter { it.email != SharedPreference(activity).getUserEmail() }
+        _userListLiveData.value = filteredUsers
     }
+
 
 }
 

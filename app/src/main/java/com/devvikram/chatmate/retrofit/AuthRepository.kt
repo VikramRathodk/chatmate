@@ -5,17 +5,17 @@ import android.app.Activity
 import android.content.ContentValues.TAG
 import android.util.Log
 import com.devvikram.chatmate.MyApplication
+import com.devvikram.chatmate.db.AppDatabase
 import com.devvikram.chatmate.retrofit.model.LoginResponse
 import com.devvikram.chatmate.retrofit.model.RegistrationResponse
 import com.devvikram.chatmate.retrofit.model.Users
 import com.google.gson.JsonParseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Call
 import java.io.IOException
 
 
-class AuthRepository(private val apiInterface: ApiInterface, activity: MyApplication) {
+class AuthRepository(private val apiInterface: ApiInterface, activity: MyApplication ,private val appDatabase:AppDatabase) {
     private val sharedPreferences = SharedPreference(activity.applicationContext)
 
     suspend fun register(user: Users): RegistrationResponse {
@@ -85,9 +85,27 @@ class AuthRepository(private val apiInterface: ApiInterface, activity: MyApplica
         sharedPreferences.saveUserData(user)
     }
 
-    suspend fun getUsers(activity: Activity): Call<List<Users>> {
+    suspend fun getUsers(activity: Activity): List<Users> {
         return withContext(Dispatchers.IO) {
-            return@withContext apiInterface.getUsers()
+            val cachedUsers = appDatabase.userDao().getAllUsers()
+
+            if (cachedUsers.isNotEmpty()) {
+                cachedUsers
+            } else {
+                try {
+                    val response = apiInterface.getUsers().execute()
+                    if (response.isSuccessful) {
+                        val users = response.body() ?: emptyList()
+                        appDatabase.userDao().insert(users)
+                        users
+                    } else {
+                        emptyList()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    emptyList()
+                }
+            }
         }
     }
 

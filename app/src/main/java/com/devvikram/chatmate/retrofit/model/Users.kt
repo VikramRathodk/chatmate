@@ -1,18 +1,23 @@
 package com.devvikram.chatmate.retrofit.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.TypeAdapter
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
 
-data class Users(val email: String, val password: String) {
-    var _id: String = ""
+
+@Entity(tableName = "users")
+data class Users(
+    val email: String = "",
+    val password: String = "",
+    @PrimaryKey
+    var _id: String = "",
     var username: String = ""
-    constructor(email: String, password: String, username: String?) : this(email, password) {
-        if (username != null) {
-            this.username = username
-        }
-    }
+) {
+
+
 }
 
 
@@ -23,7 +28,7 @@ sealed class RegistrationResponse {
 
 
 @JsonAdapter(LoginResponse.Companion.LoginResponseTypeAdapter::class)
-sealed class LoginResponse{
+sealed class LoginResponse {
     data class Success(val message: String) : LoginResponse()
     data class Error(val message: String) : LoginResponse()
     companion object {

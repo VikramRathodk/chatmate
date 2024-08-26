@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -60,6 +61,8 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")
     implementation(libs.kotlinx.coroutines.core)
 
+    implementation(libs.androidx.room.ktx)
+
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     // gson converter
@@ -67,11 +70,11 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
 
-    val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
 
     implementation ("com.squareup.picasso:picasso:2.8")
     implementation ("com.otaliastudios:cameraview:2.7.2")

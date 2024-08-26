@@ -1,6 +1,7 @@
 package com.devvikram.chatmate
 
 import android.app.Application
+import com.devvikram.chatmate.db.AppDatabase
 import com.devvikram.chatmate.retrofit.ApiInterface
 import com.devvikram.chatmate.retrofit.AuthRepository
 import com.devvikram.chatmate.retrofit.RetrofitInstance
@@ -12,7 +13,8 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         val apiService = RetrofitInstance.createService(ApiInterface::class.java)
-        authRepository = AuthRepository(apiService,this)
+        val database = AppDatabase.getDatabase(applicationContext)
+        authRepository = AuthRepository(apiService,this,database)
     }
 
 
