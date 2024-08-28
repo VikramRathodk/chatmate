@@ -21,6 +21,11 @@ class ImagePreviewChatActivity : AppCompatActivity(), DocumentAdapter.DocumentAc
         setContentView(binding.root)
 
         documentFileList = intent.getParcelableArrayListExtra("document_file_list") ?: arrayListOf()
+        val receiverEmail = intent.getStringExtra("receiver_email")
+        val receiverUsername = intent.getStringExtra("receiver_name")
+
+        binding.userName.text = receiverUsername
+
 
         documentAdapter = DocumentAdapter(this, documentFileList, this)
         viewPager = binding.imageViewPager

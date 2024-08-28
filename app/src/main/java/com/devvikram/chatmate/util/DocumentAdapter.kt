@@ -9,9 +9,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.VideoView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.devvikram.chatmate.R
 import com.devvikram.chatmate.models.DocumentModel
@@ -27,6 +31,7 @@ class DocumentAdapter(
         private const val IMAGE_VIEW_CONSTANT = 1
         private const val PDF_VIEW_CONSTANT = 2
         private const val EXCEL_VIEW_CONSTANT = 3
+        private const val VIDEO_VIEW_CONSTANT = 4
     }
 
     interface DocumentActionListener {
@@ -44,6 +49,9 @@ class DocumentAdapter(
             PDF_VIEW_CONSTANT -> {
                 val view = inflater.inflate(R.layout.pdf_preview_layout, parent, false)
                 PdfViewHolder(view, documentActionListener)
+            } VIDEO_VIEW_CONSTANT -> {
+                val view = inflater.inflate(R.layout.video_preview_layout, parent, false)
+                VideoViewHolder(view, documentActionListener)
             }
             else -> {
                 val view = inflater.inflate(R.layout.excel_preview_layout, parent, false)
@@ -82,6 +90,12 @@ class DocumentAdapter(
                     excelViewHolder.bind(documentModel)
                 }
             }
+            VIDEO_VIEW_CONSTANT -> {
+                val videoViewHolder = holder as VideoViewHolder
+                if (documentModel != null) {
+                    videoViewHolder.bind(documentModel)
+                }
+            }
         }
     }
 
@@ -93,6 +107,7 @@ class DocumentAdapter(
             "pdf" -> PDF_VIEW_CONSTANT
             "image" -> IMAGE_VIEW_CONSTANT
             "excel" -> EXCEL_VIEW_CONSTANT
+            "video" -> VIDEO_VIEW_CONSTANT
             else -> super.getItemViewType(position)
         }
     }
@@ -156,12 +171,11 @@ class DocumentAdapter(
         val imagePreview: ImageView = itemView.findViewById(R.id.image_preview)
         val fileNameTextView: TextView = itemView.findViewById(R.id.file_name_textview)
         val deleteImageView: ImageView = itemView.findViewById(R.id.delete_imageview)
-        val captionEditTextView: EditText = itemView.findViewById(R.id.caption_textview)
         val sendBtn: ImageView = itemView.findViewById(R.id.send_icon_btn)
 
         fun bind(documentModel: DocumentModel) {
             fileNameTextView.text = documentModel.fileName
-            Picasso.get().load(documentModel.uri).placeholder(R.drawable.google).into(imagePreview)
+
             deleteImageView.setOnClickListener {
                 documentActionListener.onDeleteClick(documentModel)
                 Log.d(TAG, "bind: delete click")
@@ -194,4 +208,41 @@ class DocumentAdapter(
             }
         }
     }
+    private class VideoViewHolder(
+        itemView: View,
+        private val documentActionListener: DocumentActionListener
+    ) : RecyclerView.ViewHolder(itemView) {
+
+        private val videoView: VideoView = itemView.findViewById(R.id.videoPreview)
+        private val playButton: ImageView = itemView.findViewById(R.id.playButton)
+        private val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
+        val sendBtn: Button= itemView.findViewById(R.id.send_icon_btn)
+
+        fun bind(documentModel: DocumentModel) {
+            videoView.setVideoURI(documentModel.uri.toUri())
+
+            progressBar.visibility = View.VISIBLE
+            videoView.setOnPreparedListener {
+                progressBar.visibility = View.GONE
+
+                playButton.visibility = View.VISIBLE
+            }
+
+            playButton.setOnClickListener {
+                playButton.visibility = View.GONE
+                videoView.start()
+            }
+            sendBtn.setOnClickListener {
+                documentActionListener.onDocumentSubmit(documentModel)
+            }
+
+            videoView.setOnCompletionListener {
+                playButton.visibility = View.VISIBLE
+            }
+
+
+        }
+    }
+
+
 }

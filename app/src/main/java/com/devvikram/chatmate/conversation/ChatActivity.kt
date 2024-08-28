@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -33,12 +34,18 @@ class ChatActivity : AppCompatActivity() {
     private val CAMERA_REQUEST_CODE = 2001
     private val CAMERA_PERMISSION_CODE = 2000
     private val IMAGE_PREVIEW_REQUEST_CODE = 2002
+    private val GALLERY_REQUEST_CODE = 2003
+    private val VIDEO_REQUEST_CODE = 2004
+    private val DOCUMENT_REQUEST_CODE = 2005
+
     private lateinit var binding: ActivityChatBinding
     private lateinit var messageViewModel: MessageViewModel
     private lateinit var senderRoomId: String
     private lateinit var receiverRoomId: String
     private lateinit var conversationAdapter: ConversationAdapter
     private val documentFileList = ArrayList<DocumentModel>()
+    private var receiverEmail: String? = null
+    private var receiverName: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,17 +58,19 @@ class ChatActivity : AppCompatActivity() {
 
         val intent = intent
         val receiverID = intent.getStringExtra("receiver_id")
-        val receiverEmail = intent.getStringExtra("receiver_email")
-        val receiverName = intent.getStringExtra("receiver_name")
+        receiverEmail = intent.getStringExtra("receiver_email")
+        receiverName = intent.getStringExtra("receiver_name")
         val currentUserUid = SharedPreference(applicationContext).getUid()
         senderRoomId = currentUserUid + receiverID!!
         receiverRoomId = receiverID + currentUserUid
 
         binding.userName.text = receiverName
         binding.userEmail.text = receiverEmail
-        binding.userName.setOnClickListener{
+        binding.userName.setOnClickListener {
             Log.d(TAG, "onCreate: button clicked")
-            val intent =  Intent(this, ImagePreviewChatActivity::class.java)
+            val intent = Intent(this, ImagePreviewChatActivity::class.java)
+            intent.putExtra("receiver_email", receiverEmail)
+            intent.putExtra("receiver_name", receiverName)
             startActivity(intent)
         }
 
@@ -79,24 +88,23 @@ class ChatActivity : AppCompatActivity() {
         binding.attachmentIconBtn.setOnClickListener {
             showAttachmentBottomSheet()
         }
-        binding.cameraIconBtn.setOnClickListener{
+        binding.cameraIconBtn.setOnClickListener {
             showCamera()
         }
 
     }
 
     private fun showCamera() {
-        val cameraPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+        val cameraPermission =
+            ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
 
         Log.d("Permissions", "Camera Permission: $cameraPermission")
 
         if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
+                this, arrayOf(
                     android.Manifest.permission.CAMERA,
-                ),
-                CAMERA_PERMISSION_CODE
+                ), CAMERA_PERMISSION_CODE
             )
         } else {
             startCameraIntent()
@@ -108,33 +116,81 @@ class ChatActivity : AppCompatActivity() {
         layoutManager.stackFromEnd = true
         layoutManager.isSmoothScrollbarEnabled = true
         binding.chatRecyclerview.layoutManager = layoutManager
-        conversationAdapter = ConversationAdapter(this)
+        conversationAdapter = ConversationAdapter(this, messageViewModel)
         binding.chatRecyclerview.adapter = conversationAdapter
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
             if (requestCode == CAMERA_REQUEST_CODE) {
                 documentFileList.clear()
-                val capturedImagesList: ArrayList<Uri>? = data?.getStringArrayListExtra("captured_images_list")?.map {
-                    Uri.parse(it)
-                }?.toCollection(ArrayList())
+                val capturedImagesList: ArrayList<Uri>? =
+                    data?.getStringArrayListExtra("captured_images_list")?.map {
+                        Uri.parse(it)
+                    }?.toCollection(ArrayList())
                 capturedImagesList?.forEach {
                     val uriString = it.toString()
                     Log.d(TAG, "onActivityResult: $uriString")
-                    documentFileList.add(DocumentModel(
-                        "filename.jpg",uriString,"image",true
-                    ))
+                    documentFileList.add(
+                        DocumentModel(
+                            "filename.jpg", uriString, "image", true
+                        )
+                    )
                 }
                 showPreviewOfImage(documentFileList)
                 Log.d(TAG, "onActivityResult: image file size:  $capturedImagesList")
-                Log.d(TAG, "onActivityResult: document size:  ${documentFileList.size} ,,, $documentFileList")
-
+                Log.d(
+                    TAG,
+                    "onActivityResult: document size:  ${documentFileList.size} ,,, $documentFileList"
+                )
 
             }
-            if(requestCode == IMAGE_PREVIEW_REQUEST_CODE){
-                val documentFileList = data?.getParcelableArrayListExtra<DocumentModel>("document_file_list")
+            if (requestCode == GALLERY_REQUEST_CODE) {
+                val selectedImageUri: Uri? = data?.data
+
+                if (selectedImageUri != null) {
+                    documentFileList.clear()
+                    documentFileList.add(
+                        DocumentModel(
+                            "filename.jpg", selectedImageUri.toString(), "image", true
+                        )
+                    )
+                    showPreviewOfImage(documentFileList)
+                }
+            }
+            if (requestCode == VIDEO_REQUEST_CODE) {
+                val selectedVideoUri: Uri? = data?.data
+                if (selectedVideoUri != null) {
+                    documentFileList.clear()
+                    documentFileList.add(
+                        DocumentModel(
+                            "filename.mp4", selectedVideoUri.toString(), "video", true
+                        )
+                    )
+                    showPreviewOfImage(documentFileList)
+                }
+            }
+            if (requestCode == DOCUMENT_REQUEST_CODE) {
+                val selectedDocumentUri: Uri? = data?.data
+                if (selectedDocumentUri != null) {
+                    documentFileList.clear()
+                    documentFileList.add(
+                        DocumentModel(
+                            "filename.pdf", selectedDocumentUri.toString(), "pdf", true
+                        )
+                        )
+                    showPreviewOfImage(documentFileList)
+                }
+                Log.d(TAG, "onActivityResult: document size:  ${documentFileList.size} ,,, $documentFileList")
+
+            }
+
+
+
+            if (requestCode == IMAGE_PREVIEW_REQUEST_CODE) {
+                val documentFileList =
+                    data?.getParcelableArrayListExtra<DocumentModel>("document_file_list")
                 if (documentFileList != null) {
                     sendImages(documentFileList)
                 }
@@ -143,16 +199,19 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun sendImages(documentFileList: java.util.ArrayList<DocumentModel>) {
-        documentFileList.map {
-            documentModel ->
-            messageViewModel.setMessageWithAttachment(documentModel,senderRoomId,receiverRoomId,applicationContext);
+        documentFileList.map { documentModel ->
+            messageViewModel.setMessageWithAttachment(
+                documentModel, senderRoomId, receiverRoomId, applicationContext
+            );
         }
     }
 
     private fun showPreviewOfImage(documentFileList: ArrayList<DocumentModel>) {
-        val intent =  Intent(this, ImagePreviewChatActivity::class.java)
-        intent.putParcelableArrayListExtra("document_file_list",documentFileList)
-        startActivityForResult(intent,IMAGE_PREVIEW_REQUEST_CODE);
+        val intent = Intent(this, ImagePreviewChatActivity::class.java)
+        intent.putParcelableArrayListExtra("document_file_list", documentFileList)
+        intent.putExtra("receiver_email", receiverEmail)
+        intent.putExtra("receiver_name", receiverName)
+        startActivityForResult(intent, IMAGE_PREVIEW_REQUEST_CODE);
     }
 
     private fun saveBitmapToFile(bitmap: Bitmap): Uri? {
@@ -178,9 +237,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_PERMISSION_CODE) {
@@ -191,11 +248,13 @@ class ChatActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun startCameraIntent() {
         val intent = Intent(this, CameraActivity::class.java)
         startActivityForResult(intent, CAMERA_REQUEST_CODE)
         Toast.makeText(this, "Camera permission granted", Toast.LENGTH_SHORT).show()
     }
+
     private fun observeViewModel() {
         messageViewModel.loadMessages(receiverRoomId)
         messageViewModel.messages.observe(this) { messages ->
@@ -218,7 +277,8 @@ class ChatActivity : AppCompatActivity() {
             fileUrl = "",
             messageType = "text",
             timestamp = System.currentTimeMillis(),
-            isRead = true
+            isRead = true,
+            documentModel = null
         )
         messageViewModel.sendMessage(messageModel, senderRoomId, receiverRoomId)
     }
@@ -226,6 +286,30 @@ class ChatActivity : AppCompatActivity() {
     private fun showAttachmentBottomSheet() {
         val bottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.bottom_sheet_layout, null)
+        val videoBtn = view.findViewById<TextView>(R.id.attach_video)
+        val galleryBtn = view.findViewById<TextView>(R.id.attach_gallery)
+        val attachDocumentBtn = view.findViewById<TextView>(R.id.attach_document)
+
+        attachDocumentBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            intent.type = "*/*"
+            startActivityForResult(intent, DOCUMENT_REQUEST_CODE)
+            bottomSheetDialog.dismiss()
+        }
+
+        videoBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "video/*"
+            startActivityForResult(intent, VIDEO_REQUEST_CODE)
+            bottomSheetDialog.dismiss()
+
+        }
+        galleryBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, GALLERY_REQUEST_CODE)
+            bottomSheetDialog.dismiss()
+        }
 
         bottomSheetDialog.setContentView(view)
         bottomSheetDialog.show()
