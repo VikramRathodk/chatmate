@@ -12,11 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.devvikram.chatmate.auth.viewmodel.AuthViewModel
-import com.devvikram.chatmate.auth.viewmodel.AuthViewModelFactory
-import com.devvikram.chatmate.conversation.ChatActivity
 import com.devvikram.chatmate.MyApplication
 import com.devvikram.chatmate.auth.adapters.UserAdapter
+import com.devvikram.chatmate.auth.viewmodel.AuthViewModel
+import com.devvikram.chatmate.auth.viewmodel.AuthViewModelFactory
+import com.devvikram.chatmate.conversations.ChatActivity
 import com.devvikram.chatmate.databinding.FragmentUserBinding
 import com.devvikram.chatmate.retrofit.model.Users
 
@@ -47,7 +47,7 @@ class UserFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentUserBinding.inflate(layoutInflater)
 
         authViewModel.getAllUsers(requireActivity())

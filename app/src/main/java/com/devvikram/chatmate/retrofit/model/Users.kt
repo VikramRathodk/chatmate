@@ -15,10 +15,7 @@ data class Users(
     @PrimaryKey
     var _id: String = "",
     var username: String = ""
-) {
-
-
-}
+)
 
 
 sealed class RegistrationResponse {

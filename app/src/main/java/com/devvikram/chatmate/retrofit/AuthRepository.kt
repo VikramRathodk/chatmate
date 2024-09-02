@@ -15,7 +15,8 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 
 
-class AuthRepository(private val apiInterface: ApiInterface, activity: MyApplication ,private val appDatabase:AppDatabase) {
+class AuthRepository(private val apiInterface: ApiInterface, activity: MyApplication ,
+                     private val appDatabase:AppDatabase) {
     private val sharedPreferences = SharedPreference(activity.applicationContext)
 
     suspend fun register(user: Users): RegistrationResponse {

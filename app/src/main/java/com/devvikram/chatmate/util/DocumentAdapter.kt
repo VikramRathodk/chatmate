@@ -73,9 +73,9 @@ class DocumentAdapter(
                     Log.d(TAG, "onBindViewHolder: ${documentModel.uri}")
                 }
                 if (documentModel != null) {
-                    if (documentList != null) {
-                        imageViewHolder.bind(documentModel, documentList)
-                    }
+
+                    documentList?.let { imageViewHolder.bind(documentModel, it) }
+
                 }
             }
             PDF_VIEW_CONSTANT -> {

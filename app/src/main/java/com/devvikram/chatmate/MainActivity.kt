@@ -20,6 +20,8 @@ import com.devvikram.chatmate.auth.activities.LoginActivity
 import com.devvikram.chatmate.auth.viewmodel.AuthViewModel
 import com.devvikram.chatmate.auth.viewmodel.AuthViewModelFactory
 import com.devvikram.chatmate.databinding.ActivityMainBinding
+import com.devvikram.chatmate.fragments.MoreFragment
+import com.devvikram.chatmate.fragments.UpdatesFragment
 import com.devvikram.chatmate.fragments.UserFragment
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -51,11 +53,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.updates_item -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_layout, UserFragment()).commit()
+                        .replace(R.id.frame_layout, UpdatesFragment()).commit()
                 }
                 R.id.more_item -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_layout, UserFragment()).commit()
+                        .replace(R.id.frame_layout, MoreFragment()).commit()
                 }
                 else -> {
                     supportFragmentManager.beginTransaction()

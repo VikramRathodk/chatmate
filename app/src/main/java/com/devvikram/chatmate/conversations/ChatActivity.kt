@@ -1,8 +1,10 @@
-package com.devvikram.chatmate.conversation
+package com.devvikram.chatmate.conversations
 
+import com.devvikram.chatmate.db.model.Conversation
 import ConversationAdapter
 import SharedPreference
 import android.app.Activity
+import android.app.Application
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -21,7 +23,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.devvikram.chatmate.ImagePreviewChatActivity
 import com.devvikram.chatmate.R
-import com.devvikram.chatmate.conversation.model.Conversation
 import com.devvikram.chatmate.databinding.ActivityChatBinding
 import com.devvikram.chatmate.models.DocumentModel
 import com.devvikram.chatmate.util.CameraActivity
@@ -53,7 +54,7 @@ class ChatActivity : AppCompatActivity() {
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val factory = MessageViewModelFactory()
+        val factory = MessageViewModelFactory(Application())
         messageViewModel = ViewModelProvider(this, factory)[MessageViewModel::class.java]
 
         val intent = intent
@@ -257,7 +258,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         messageViewModel.loadMessages(receiverRoomId)
-        messageViewModel.messages.observe(this) { messages ->
+        messageViewModel.messages.observe(this) { messages: List<Conversation>? ->
             messages?.let {
                 conversationAdapter.submitList(messages)
                 binding.chatRecyclerview.post {
@@ -278,10 +279,11 @@ class ChatActivity : AppCompatActivity() {
             messageType = "text",
             timestamp = System.currentTimeMillis(),
             isRead = true,
-            documentModel = null
+            roomPrimaryKey = 0
         )
         messageViewModel.sendMessage(messageModel, senderRoomId, receiverRoomId)
     }
+
 
     private fun showAttachmentBottomSheet() {
         val bottomSheetDialog = BottomSheetDialog(this)

@@ -1,4 +1,3 @@
-
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
@@ -13,8 +12,8 @@ import android.widget.Toast
 import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import com.devvikram.chatmate.R
-import com.devvikram.chatmate.conversation.MessageViewModel
-import com.devvikram.chatmate.conversation.model.Conversation
+import com.devvikram.chatmate.conversations.MessageViewModel
+import com.devvikram.chatmate.db.model.Conversation
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -134,6 +133,7 @@ class ConversationAdapter(
             RECEIVER_VIDEO_VIEW_TYPE -> (holder as ReceiverVideoViewHolder).bind(conversation)
         }
     }
+
     inner class SenderTextViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textMessageTextview: TextView = itemView.findViewById(R.id.message_textview)
         private val textMessageTime: TextView = itemView.findViewById(R.id.text_time_textview)
@@ -153,9 +153,11 @@ class ConversationAdapter(
     inner class SenderImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textMessageTextview: TextView = itemView.findViewById(R.id.message_textview)
         private val textMessageTime: TextView = itemView.findViewById(R.id.text_time_textview)
-        private val filePreviewImageView: ImageView = itemView.findViewById(R.id.file_preview_imageview)
+        private val filePreviewImageView: ImageView =
+            itemView.findViewById(R.id.file_preview_imageview)
         private val progressBar: ProgressBar = itemView.findViewById(R.id.progress_bar)
-        private val progressPercentageTextView: TextView = itemView.findViewById(R.id.progress_percentage_textview)
+        private val progressPercentageTextView: TextView =
+            itemView.findViewById(R.id.progress_percentage_textview)
 
         fun bind(conversation: Conversation) {
             textMessageTextview.text = conversation.message
@@ -183,7 +185,8 @@ class ConversationAdapter(
                             .into(filePreviewImageView)
                     } else {
                         filePreviewImageView.setImageResource(R.drawable.image_item_background)
-                        Toast.makeText(context, "Failed to download file", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Failed to download file", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 })
             } else {
@@ -198,31 +201,30 @@ class ConversationAdapter(
         }
 
     }
-    inner class SenderPdfViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
+
+    inner class SenderPdfViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textMessageTextview: TextView = itemView.findViewById(R.id.message_textview)
         private val textMessageTime: TextView = itemView.findViewById(R.id.text_time_textview)
-        private val filePreviewImageView: ImageView = itemView.findViewById(R.id.file_icon_imageview)
+        private val filePreviewImageView: ImageView =
+            itemView.findViewById(R.id.file_icon_imageview)
         private val fileName = itemView.findViewById<TextView>(R.id.pdf_name_textview)
 
         fun bind(conversation: Conversation) {
             textMessageTextview.text = conversation.message
             textMessageTime.text = formatTime(conversation.timestamp)
 
-            if (conversation.documentModel != null) {
-                filePreviewImageView.setImageResource(R.drawable.icon_pdf)
-                fileName.text = conversation.documentModel.fileName
 
-                filePreviewImageView.setOnClickListener {
-                    if (conversation.fileUrl.isNotEmpty()) {
-                        messageViewModel.openPdf(conversation, context)
-                    } else {
-                        Toast.makeText(context, "No file found", Toast.LENGTH_SHORT).show()
-                    }
+            filePreviewImageView.setImageResource(R.drawable.icon_pdf)
+            fileName.text = conversation.fileUrl
+
+            filePreviewImageView.setOnClickListener {
+                if (conversation.fileUrl.isNotEmpty()) {
+                    messageViewModel.openPdf(conversation, context)
+                } else {
+                    Toast.makeText(context, "No file found", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                filePreviewImageView.visibility = View.GONE
-                fileName.text = ""
             }
+
 
             Log.d(TAG, "bind: ${conversation.fileUrl}")
         }
@@ -232,6 +234,7 @@ class ConversationAdapter(
             return dateFormat.format(Date(timestamp))
         }
     }
+
     inner class SenderVideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textMessageTextview: TextView = itemView.findViewById(R.id.message_textview)
         private val textMessageTime: TextView = itemView.findViewById(R.id.text_time_textview)
@@ -264,25 +267,30 @@ class ConversationAdapter(
             return dateFormat.format(Date(timestamp))
         }
     }
-    inner class ReceiverTextViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+
+    inner class ReceiverTextViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textMessageTextview: TextView = itemView.findViewById(R.id.message_textview)
         private val textMessageTime: TextView = itemView.findViewById(R.id.text_time_textview)
         fun bind(conversation: Conversation) {
             textMessageTextview.text = conversation.message
             textMessageTime.text = formatTime(conversation.timestamp)
         }
+
         private fun formatTime(timestamp: Long): String {
             val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
             return dateFormat.format(Date(timestamp))
         }
 
     }
-    inner class ReceiverImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+
+    inner class ReceiverImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textMessageTextview: TextView = itemView.findViewById(R.id.message_textview)
         private val textMessageTime: TextView = itemView.findViewById(R.id.text_time_textview)
-        private val filePreviewImageView: ImageView = itemView.findViewById(R.id.file_preview_imageview)
+        private val filePreviewImageView: ImageView =
+            itemView.findViewById(R.id.file_preview_imageview)
         private val progressBar: ProgressBar = itemView.findViewById(R.id.progress_bar)
-        private val progressPercentageTextView: TextView = itemView.findViewById(R.id.progress_percentage_textview)
+        private val progressPercentageTextView: TextView =
+            itemView.findViewById(R.id.progress_percentage_textview)
 
         fun bind(conversation: Conversation) {
             textMessageTextview.text = conversation.message
@@ -309,29 +317,33 @@ class ConversationAdapter(
             }
 
         }
+
         private fun formatTime(timestamp: Long): String {
             val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-            return dateFormat.format(Date(timestamp))}
+            return dateFormat.format(Date(timestamp))
+        }
 
     }
-    inner class ReceiverPdfViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+
+    inner class ReceiverPdfViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textMessageTextview: TextView = itemView.findViewById(R.id.message_textview)
         private val textMessageTime: TextView = itemView.findViewById(R.id.text_time_textview)
-        private val filePreviewImageView: ImageView = itemView.findViewById(R.id.file_icon_imageview)
+        private val filePreviewImageView: ImageView =
+            itemView.findViewById(R.id.file_icon_imageview)
 
         fun bind(conversation: Conversation) {
-            if(conversation.message.isNotEmpty()){
+            if (conversation.message.isNotEmpty()) {
                 textMessageTextview.text = conversation.message
                 textMessageTextview.visibility = View.VISIBLE
-            }else{
+            } else {
                 textMessageTextview.visibility = View.GONE
             }
             textMessageTime.text = formatTime(conversation.timestamp)
             filePreviewImageView.setImageResource(R.drawable.icon_pdf)
             filePreviewImageView.setOnClickListener {
                 if (conversation.fileUrl.isNotEmpty()) {
-                    messageViewModel.openPdf(conversation,context)
-                }else{
+                    messageViewModel.openPdf(conversation, context)
+                } else {
                     Toast.makeText(context, "No file found", Toast.LENGTH_SHORT).show()
                 }
 
@@ -344,7 +356,8 @@ class ConversationAdapter(
 
         }
     }
-    inner class ReceiverVideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+
+    inner class ReceiverVideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val textMessageTime: TextView = itemView.findViewById(R.id.text_time_textview)
         private val videoView: VideoView = itemView.findViewById(R.id.player_view)
 
@@ -370,6 +383,7 @@ class ConversationAdapter(
                 true
             }
         }
+
         private fun formatTime(timestamp: Long): String {
             val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
             return dateFormat.format(Date(timestamp))
